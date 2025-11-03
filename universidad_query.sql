@@ -124,16 +124,79 @@ WHERE tipo = 'alumno' AND YEAR(fecha_nacimiento) = 1999;
 -- El resultado sólo debe mostrar dos columnas, una con el nombre del departamento y otra con el número de profesores/as que hay en ese departamento.
 -- El resultado sólo debe incluir los departamentos que tienen profesores/as asociados y tendrá que estar ordenado de mayor a menor por el número de profesores/as.
 SELECT d.nombre,COUNT(a.id)
-FROM persona AS a
-JOIN profesor AS p ON a.id = p.id_profesor
-JOIN departamento AS d ON d.id = p.id_departamento
+FROM persona AS p
+JOIN profesor AS pro ON a.id = pro.id_profesor
+JOIN departamento AS d ON d.id = pro.id_departamento
 WHERE tipo = 'profesor' 
 GROUP BY d.nombre
 ORDER BY COUNT(a.id) DESC;
 
 #4 Devuelve un listado con todos los departamentos y el número de profesores/as que hay en cada uno de ellos. 
 -- Tenga en cuenta que pueden existir departamentos que no tienen profesores asociados. Estos departamentos también deben aparecer en el listado.
+SELECT d.nombre,COUNT(p.id_profesor) as profesor_number
+FROM departamento AS d
+LEFT JOIN profesor AS p ON d.id = p.id_departamento
+GROUP BY d.id
+ORDER BY profesor_number DESC;
+
+#5 Devuelve un listado con el nombre de todos los grados existentes en la base de datos y 
+-- el número de asignaturas que tiene cada uno. Ten en cuenta que pueden existir grados que carecen de asignaturas asociadas. 
+-- Estos grados también deben aparecer en el listado. El resultado deberá estar ordenado de mayor a menor por el número de asignaturas.
+SELECT g.nombre,COUNT(a.id) as asignatura_number
+FROM grado AS g
+LEFT JOIN asignatura AS a ON g.id = a.id_grado
+GROUP BY g.id,g.nombre
+ORDER BY  COUNT(a.id) DESC;
+
+#6 Devuelve un listado con el nombre de todos los grados existentes en la base de datos y el número de asignaturas que tiene cada uno, 
+-- de los grados que tengan más de 40 asignaturas asociadas.
+SELECT g.nombre,COUNT(a.id) as asignatura_number
+FROM grado AS g
+LEFT JOIN asignatura AS a ON g.id = a.id_grado
+GROUP BY g.id,g.nombre
+HAVING COUNT(a.id) > 40 
+ORDER BY  COUNT(a.id) DESC;
+
+#7 Devuelve un listado que muestre el nombre de los grados y la suma del número total de créditos existentes para cada tipo de asignatura. 
+-- El resultado debe tener tres columnas: nombre del grado, tipo de asignatura y la suma de los créditos de todas las asignaturas que existen de este tipo.
+SELECT g.nombre,a.tipo AS asignatura_tipo,SUM(a.creditos) as credit_sum
+FROM grado AS g
+LEFT JOIN asignatura AS a ON g.id = a.id_grado
+GROUP BY g.id,g.nombre,a.tipo 
+
+#8 Devuelve un listado que muestre cuántos alumnos se han matriculado de alguna asignatura en cada uno de los cursos escolares. 
+-- El resultado tendrá que mostrar dos columnas, una columna con el año de inicio del curso escolar y otra con el número de alumnos matriculados.
+SELECT c.anyo_inicio,COUNT(DISTINCT a.id_alumno) AS num_alumnos
+FROM curso_escolar AS c
+LEFT JOIN alumno_se_matricula_asignatura AS a ON  c.id = a.id_curso_escolar
+GROUP BY c.id,c.anyo_inicio
+ORDER BY c.anyo_inicio;
 
 
+#9 Devuelve un listado con el número de asignaturas que imparte cada profesor/a. 
+-- El listado debe tener en cuenta a aquellos profesores/as que no imparten ninguna asignatura.
+-- El resultado mostrará cinco columnas: id, nombre, primer apellido, segundo apellido y número de asignaturas.
+-- El resultado estará ordenado de mayor a menor por el número de asignaturas.
+SELECT p.id,p.nombre,p.apellido1,p.apellido2,COUNT(a.id) AS asignaturas_numero
+FROM persona AS p
+LEFT JOIN profesor AS pro ON p.id = pro.id_profesor
+LEFT JOIN asignatura AS a ON pro.id_profesor = a.id_profesor
+GROUP BY p.id,p.nombre,p.apellido1,p.apellido2
+ORDER BY COUNT(a.id) DESC;
+
+#10 Devuelve todos los datos del alumno/a más joven.
+SELECT *
+FROM persona
+WHERE tipo = 'alumno'
+ORDER BY fecha_nacimiento DESC
+LIMIT 1;
 
 
+#11 Devuelve un listado con los profesores/as que tienen un departamento asociado y que no imparten ninguna asignatura.
+SELECT p.nombre,p.apellido1,p.apellido2,d.nombre
+FROM profesor AS pro
+JOIN persona AS p ON p.id = pro.id_profesor
+JOIN departamento AS d ON d.id = pro.id_departamento
+LEFT JOIN asignatura AS a ON a.id_profesor = pro.id_profesor
+WHERE a.id IS NULL 
+ORDER BY p.nombre;
