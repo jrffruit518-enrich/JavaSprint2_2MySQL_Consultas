@@ -231,7 +231,7 @@ ORDER BY
 -- Tenga en cuenta que pueden existir departamentos que no tienen profesores asociados. Estos departamentos también deben aparecer en el listado.
 SELECT
     d.nombre,
-    COUNT(p.id_profesor) as profesor_number
+    COUNT(p.id_profesor) AS profesor_number
 FROM
     departamento AS d
     LEFT JOIN profesor AS p ON d.id = p.id_departamento
@@ -245,7 +245,7 @@ ORDER BY
 -- Estos grados también deben aparecer en el listado. El resultado deberá estar ordenado de mayor a menor por el número de asignaturas.
 SELECT
     g.nombre,
-    COUNT(a.id) as asignatura_number
+    COUNT(a.id) AS asignatura_number
 FROM
     grado AS g
     LEFT JOIN asignatura AS a ON g.id = a.id_grado
@@ -259,7 +259,7 @@ ORDER BY
 -- de los grados que tengan más de 40 asignaturas asociadas.
 SELECT
     g.nombre,
-    COUNT(a.id) as asignatura_number
+    COUNT(a.id) AS asignatura_number
 FROM
     grado AS g
     LEFT JOIN asignatura AS a ON g.id = a.id_grado
@@ -276,15 +276,17 @@ ORDER BY
 SELECT
     g.nombre,
     a.tipo AS asignatura_tipo,
-    SUM(a.creditos) as credit_sum
+    SUM(a.creditos) AS credit_sum
 FROM
     grado AS g
     LEFT JOIN asignatura AS a ON g.id = a.id_grado
 GROUP BY
     g.id,
     g.nombre,
-    a.tipo #8 Devuelve un listado que muestre cuántos alumnos se han matriculado de alguna asignatura en cada uno de los cursos escolares. 
-    -- El resultado tendrá que mostrar dos columnas, una columna con el año de inicio del curso escolar y otra con el número de alumnos matriculados.
+    a.tipo;
+    
+ #8 Devuelve un listado que muestre cuántos alumnos se han matriculado de alguna asignatura en cada uno de los cursos escolares. 
+ -- El resultado tendrá que mostrar dos columnas, una columna con el año de inicio del curso escolar y otra con el número de alumnos matriculados.
 SELECT
     c.anyo_inicio,
     COUNT(DISTINCT a.id_alumno) AS num_alumnos
@@ -336,7 +338,7 @@ SELECT
     p.nombre,
     p.apellido1,
     p.apellido2,
-    d.nombre
+    d.nombre AS departamento_nombre
 FROM
     profesor AS pro
     JOIN persona AS p ON p.id = pro.id_profesor
