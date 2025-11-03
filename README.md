@@ -77,12 +77,12 @@ SELECT nombre, apellido1, apellido2 FROM persona WHERE tipo = 'alumno' ORDER BY 
 
 Visualiza resultados directamente en la consola o Workbench.
 Ejemplo de salida (#24 tienda):
-text+-----------------------------+--------+---------------------+
+```
 | nombre                      | precio | nombre_fabricante   |
 +-----------------------------+--------+---------------------+
 | Impresora HP Deskjet 3720  |  59.99 | Hewlett-Packard     |
 +-----------------------------+--------+---------------------+
-
+```
 
 ## 🌐 Despliegue
 Proyecto educativo local. Para uso en servidor:
